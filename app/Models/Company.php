@@ -19,5 +19,7 @@ class Company extends Model
         'contact_person',
         'slug',
         'uuid',
+        'is_active',
+        'website',
     ];
 }

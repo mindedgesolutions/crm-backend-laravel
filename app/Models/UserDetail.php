@@ -13,6 +13,7 @@ class UserDetail extends Model
         'slug',
         'uuid',
         'avatar',
+        'is_active',
     ];
 
     public function user()
