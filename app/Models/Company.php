@@ -22,4 +22,9 @@ class Company extends Model
         'is_active',
         'website',
     ];
+
+    public function userDetail()
+    {
+        return $this->hasOne(UserDetail::class, 'company_id', 'id');
+    }
 }

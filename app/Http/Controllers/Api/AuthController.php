@@ -40,4 +40,19 @@ class AuthController extends Controller
     // ------------------------------------------------------------------------
 
     public function register(Request $request) {}
+
+    // ------------------------------------------------------------------------
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+        return response()->json(['message' => 'Successfully logged out'], Response::HTTP_OK);
+    }
+
+    // ------------------------------------------------------------------------
+
+    public function currentUser()
+    {
+        return response()->json(['user' => Auth::user()], Response::HTTP_OK);
+    }
 }

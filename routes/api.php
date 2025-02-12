@@ -11,7 +11,14 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('login', 'login');
 });
 
-Route::middleware(['auth:api'])->prefix('admin')->group(function () {
-    Route::apiResource('plan-attributes', PlanAttributesController::class)->except('show');
-    Route::apiResource('companies', CompanyController::class);
+Route::middleware(['auth:api'])->group(function () {
+    Route::controller(AuthController::class)->prefix('auth')->group(function () {
+        Route::post('logout', 'logout');
+        Route::get('current-user', 'currentUser');
+    });
+
+    Route::prefix('admin')->group(function () {
+        Route::apiResource('plan-attributes', PlanAttributesController::class)->except('show');
+        Route::apiResource('companies', CompanyController::class)->except(['destroy']);
+    });
 });
