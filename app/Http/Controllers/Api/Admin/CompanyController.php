@@ -47,7 +47,7 @@ class CompanyController extends Controller
                 'password' => bcrypt('password'),
             ]);
 
-            $userDetails = UserDetail::insert([
+            UserDetail::insert([
                 'user_id' => $user->id,
                 'company_id' => $company->id,
                 'mobile' => $request->mobile,
