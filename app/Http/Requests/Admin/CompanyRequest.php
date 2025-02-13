@@ -24,9 +24,9 @@ class CompanyRequest extends FormRequest
      */
     public function rules(): array
     {
-        $encId = $this->route('company');
-        $id = Crypt::decrypt($encId);
-        $userId = UserDetail::where('company_id', $id)->first()->user_id;
+        $encId = $this->route('company') ?? null;
+        $id = $this->route('company') ? Crypt::decrypt($encId) : null;
+        $userId = $this->route('company') ? UserDetail::where('company_id', $id)->first()->user_id : null;
 
         return [
             'name' => 'required|max:255',

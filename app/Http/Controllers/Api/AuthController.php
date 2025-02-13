@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserProfileRequest;
+use App\Models\User;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -28,7 +32,7 @@ class AuthController extends Controller
             return response()->json(['errors' => 'Incorrect credentials'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = Auth::user()->with('roles')->with('userDetail')->first();
+        $user = User::whereId(Auth::id())->with('roles')->with('userDetail')->first();
         $token = $user->createToken('auth_token')->accessToken;
 
         return response()->json([
@@ -53,6 +57,26 @@ class AuthController extends Controller
 
     public function currentUser()
     {
-        return response()->json(['user' => Auth::user()], Response::HTTP_OK);
+        $user = User::whereId(Auth::id())->with('roles')->with('userDetail')->first();
+
+        return response()->json(['user' => $user], Response::HTTP_OK);
+    }
+
+    // ------------------------------------------------------------------------
+
+    public function updateProfile(UserProfileRequest $request)
+    {
+        User::findOrFail(Auth::id())->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        UserDetail::where('user_id', Auth::id())->update([
+            'slug' => Str::slug($request->name),
+            'mobile' => $request->mobile,
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['message' => 'Profile updated'], Response::HTTP_OK);
     }
 }

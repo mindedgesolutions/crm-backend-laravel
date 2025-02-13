@@ -52,7 +52,7 @@ class CompanyController extends Controller
                 'name' => $request->contactPerson,
                 'email' => $request->userEmail,
                 'password' => bcrypt('password'),
-            ]);
+            ])->assignRole('admin');
 
             UserDetail::insert([
                 'user_id' => $user->id,

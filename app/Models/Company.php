@@ -21,6 +21,7 @@ class Company extends Model
         'uuid',
         'is_active',
         'website',
+        'enc_id',
     ];
 
     public function userDetail()
