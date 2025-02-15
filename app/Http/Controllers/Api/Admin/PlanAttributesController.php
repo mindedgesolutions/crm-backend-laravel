@@ -13,9 +13,9 @@ use Illuminate\Support\Str;
 
 class PlanAttributesController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $attributes = PlanAttribute::orderBy('attribute')->paginate(10);
+        $attributes = PlanAttribute::where('is_active', true)->orderBy('attribute')->paginate(10);
 
         return response()->json(['attributes' => $attributes], Response::HTTP_OK);
     }
@@ -110,7 +110,9 @@ class PlanAttributesController extends Controller
 
     public function destroy(string $id)
     {
-        PlanAttribute::whereId($id)->delete();
+        PlanAttribute::whereId($id)->update([
+            'is_active' => false,
+        ]);
 
         return response()->json(['message' => 'Attribute deleted successfully'], Response::HTTP_OK);
     }
