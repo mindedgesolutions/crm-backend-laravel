@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\PlanAttributesController;
 use App\Http\Controllers\Api\Admin\PlanController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MasterController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,10 +23,15 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::middleware('role:super admin')->prefix('admin')->group(function () {
         Route::apiResource('companies', CompanyController::class)->except(['destroy']);
-        Route::apiResource('plan-attributes', PlanAttributesController::class)->except('show');
-        Route::apiResource('plans', PlanController::class);
         Route::apiResource('users', UserController::class)->except(['show']);
         Route::get('company-users', [UserController::class, 'companyUsers']);
         Route::put('activate-users/{user}', [UserController::class, 'activateUser']);
+        Route::apiResource('plan-attributes', PlanAttributesController::class)->except('show');
+        Route::apiResource('plans', PlanController::class);
+    });
+
+    // This controller is for all dropdowns and pre-filled data ---------------------
+    Route::controller(MasterController::class)->prefix('masters')->group(function () {
+        Route::get('plan-attributes', 'planAttributes');
     });
 });
