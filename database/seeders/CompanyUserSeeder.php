@@ -29,7 +29,7 @@ class CompanyUserSeeder extends Seeder
                     'name' => $name = $faker->name,
                     'email' => $faker->unique()->safeEmail,
                     'password' => bcrypt('password'),
-                ])->assignRole(Role::where('name', $role)->where('guard_name', 'api')->first());
+                ])->assignRole(Role::where('name', $role)->where('guard_name', 'web')->first());
 
                 UserDetail::insert([
                     'user_id' => $user->id,

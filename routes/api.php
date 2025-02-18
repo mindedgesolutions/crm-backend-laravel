@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\PlanAttributesController;
 use App\Http\Controllers\Api\Admin\PlanController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MasterController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,7 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::middleware('role:super admin')->prefix('admin')->group(function () {
+        Route::get('super/dashboard', [DashboardController::class, 'superAdminDashboard']);
         Route::apiResource('companies', CompanyController::class)->except(['destroy']);
         Route::apiResource('users', UserController::class)->except(['show']);
         Route::get('company-users', [UserController::class, 'companyUsers']);
