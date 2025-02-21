@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\LeadStatusMaster;
 use App\Models\PlanAttribute;
 
 class MasterController extends Controller
@@ -15,5 +16,16 @@ class MasterController extends Controller
             ->get();
 
         return response()->json($attributes);
+    }
+
+    // -------------------------------------------------------
+
+    public function leadStatus($companyId)
+    {
+        $status = LeadStatusMaster::where('company_id', $companyId)
+            ->orWhereNull('company_id')
+            ->paginate(10);
+
+        return response()->json($status);
     }
 }

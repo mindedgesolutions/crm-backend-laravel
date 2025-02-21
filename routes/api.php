@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\PlanAttributesController;
 use App\Http\Controllers\Api\Admin\PlanController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Company\LeadStatusController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MasterController;
 use Illuminate\Support\Facades\Route;
@@ -32,8 +33,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('plans', PlanController::class);
     });
 
-    // This controller is for all dropdowns and pre-filled data ---------------------
+    // For all dropdowns and pre-filled data start ---------------------
     Route::controller(MasterController::class)->prefix('masters')->group(function () {
         Route::get('plan-attributes', 'planAttributes');
+        Route::get('lead-status/{companyId?}', 'leadStatus');
     });
+    // For all dropdowns and pre-filled data end ---------------------
+
+    Route::apiResource('lead-status-master', LeadStatusController::class)->except(['index', 'show']);
+    Route::put('lead-status-master-activate/{id}', [LeadStatusController::class, 'activate']);
 });
