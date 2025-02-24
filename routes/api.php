@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\PlanController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Company\LeadStatusController;
+use App\Http\Controllers\Api\Company\NetworkController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MasterController;
 use Illuminate\Support\Facades\Route;
@@ -37,9 +38,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::controller(MasterController::class)->prefix('masters')->group(function () {
         Route::get('plan-attributes', 'planAttributes');
         Route::get('lead-status/{companyId?}', 'leadStatus');
+        Route::get('networks/{companyId?}', 'networks');
     });
     // For all dropdowns and pre-filled data end ---------------------
 
-    Route::apiResource('lead-status-master', LeadStatusController::class)->except(['index', 'show']);
-    Route::put('lead-status-master-activate/{id}', [LeadStatusController::class, 'activate']);
+    Route::middleware(['role:admin'])->prefix('company')->group(function () {
+        Route::apiResource('lead-status', LeadStatusController::class)->except(['show']);
+        Route::put('lead-status-activate/{id}', [LeadStatusController::class, 'activate']);
+        Route::apiResource('networks', NetworkController::class)->except(['show', 'update']);
+        Route::post('networks/{id}', [NetworkController::class, 'update']);
+        Route::put('network-activate/{id}', [NetworkController::class, 'activate']);
+    });
 });

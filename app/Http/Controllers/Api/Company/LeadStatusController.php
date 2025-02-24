@@ -12,6 +12,17 @@ use Illuminate\Support\Str;
 
 class LeadStatusController extends Controller
 {
+    public function index()
+    {
+        $status = LeadStatusMaster::where('company_id', Auth::user()->userDetail->company_id)
+            ->orWhereNull('company_id')
+            ->paginate(10);
+
+        return response()->json($status);
+    }
+
+    // ------------------------------------------------------
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -46,7 +57,31 @@ class LeadStatusController extends Controller
 
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'max:255', 'min:3', function ($attribute, $value, $fail) use ($id) {
+                $slug = Str::slug($value);
+                $check = LeadStatusMaster::whereSlug($slug)->where('id', '!=', $id)->first();
+                if ($check) {
+                    $fail('Lead status already exists');
+                }
+            }],
+            [
+                '*.required' => ':Attribute is required',
+                'name.max' => 'Maximum 255 characters allowed',
+                'name.min' => 'Minimum 3 characters required'
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        LeadStatusMaster::whereId($id)->update([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name)
+        ]);
+
+        return response()->json(['message' => 'Lead status updated successfully'], Response::HTTP_OK);
     }
 
     // ------------------------------------------------------

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\LeadStatusMaster;
+use App\Models\Network;
 use App\Models\PlanAttribute;
 
 class MasterController extends Controller
@@ -24,8 +25,17 @@ class MasterController extends Controller
     {
         $status = LeadStatusMaster::where('company_id', $companyId)
             ->orWhereNull('company_id')
-            ->paginate(10);
+            ->get();
 
         return response()->json($status);
+    }
+
+    // -------------------------------------------------------
+
+    public function networks($companyId)
+    {
+        $networks = Network::where('company_id', $companyId)->get();
+
+        return response()->json($networks);
     }
 }
