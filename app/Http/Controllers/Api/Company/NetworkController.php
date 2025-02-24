@@ -82,7 +82,7 @@ class NetworkController extends Controller
 
     // ------------------------------------------------------
 
-    public function update(Request $request, string $id)
+    public function updateInfo(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'max:255', 'min:3', function ($attribute, $value, $fail) use ($id) {
