@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Company\LeadStatusController;
 use App\Http\Controllers\Api\Company\NetworkController;
+use App\Http\Controllers\Api\Company\UserController as CompanyUserController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MasterController;
 use Illuminate\Support\Facades\Route;
@@ -46,7 +47,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('lead-status', LeadStatusController::class)->except(['show']);
         Route::put('lead-status-activate/{id}', [LeadStatusController::class, 'activate']);
         Route::apiResource('networks', NetworkController::class)->except(['show', 'update']);
-        Route::post('networks/{id}', [NetworkController::class, 'update']);
+        Route::post('network/update/{id}', [NetworkController::class, 'updateInfo']);
         Route::put('network-activate/{id}', [NetworkController::class, 'activate']);
+        Route::apiResource('users', CompanyUserController::class);
     });
 });
